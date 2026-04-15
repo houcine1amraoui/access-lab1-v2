@@ -2,11 +2,9 @@ const express = require("express");
 const session = require("express-session");
 const path = require("path");
 
-// const { seedUsers } = require("./utils.js");
 const userRepo = require("./repositories/userRepository.js");
 
 const app = express();
-// seedUsers();
 
 // Middleware
 app.use(express.json());
@@ -46,7 +44,6 @@ app.get("/account", isAuthenticated, function (req, res) {
 
 app.get("/administrator-panel", function (req, res) {
   const flag = "cab853c52730";
-  //   const users = loadUsers();
   const users = userRepo.getAllUsers();
   const nonAdminUsers = users.filter((user) => user.role !== "admin");
   res.render("admin", { users: nonAdminUsers, flag: flag });
