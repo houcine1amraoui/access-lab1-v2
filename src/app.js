@@ -2,11 +2,11 @@ const express = require("express");
 const session = require("express-session");
 const path = require("path");
 
-const { seedUsers } = require("./utils.js");
+// const { seedUsers } = require("./utils.js");
 const userRepo = require("./repositories/userRepository.js");
 
 const app = express();
-seedUsers();
+// seedUsers();
 
 // Middleware
 app.use(express.json());
@@ -74,12 +74,9 @@ function isAdmin(req, res, next) {
   next();
 }
 
-app.post("/login", async (req, res) => {
+app.post("/login", (req, res) => {
   const { username, password } = req.body;
-  const users = userRepo.getAllUsers();
-  const user = users.find((user) => {
-    return user.username === username;
-  });
+  const user = userRepo.findUser(username);
 
   // check username
   if (!user) {

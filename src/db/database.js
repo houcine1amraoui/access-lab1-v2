@@ -1,22 +1,17 @@
-const Database = require("better-sqlite3");
-const path = require("path");
+const low = require("lowdb");
+const Memory = require("lowdb/adapters/Memory");
 
-// Store DB outside pkg (IMPORTANT)
-const dbPath = path.join(process.cwd(), "users.db");
+const adapter = new Memory();
+const db = low(adapter);
 
-const db = new Database(dbPath);
+// Set default structure
+db.defaults({ users: [] }).write();
 
-// Initialize tables
-db.prepare(
-  `
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    role TEXT NOT NULL
-  )
-`,
-).run();
+function initDB() {
+  // nothing needed (sync DB)
+}
 
-module.exports = db;
+module.exports = {
+  db,
+  initDB,
+};

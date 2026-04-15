@@ -1,6 +1,14 @@
 const app = require("./app.js");
+const { initDB } = require("./db/database.js");
+const { seedUsers } = require("./utils.js");
 
 async function startServer() {
+  await initDB();
+  await seedUsers();
+
+  process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT:", err);
+  });
   const PORT = 3000;
   try {
     app.listen(PORT, () => {

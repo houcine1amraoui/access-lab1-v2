@@ -1,58 +1,35 @@
-const db = require("../db/database");
+const { db } = require("../db/database");
 
-// CREATE
-function createUser(username, email, password, role) {
-  const stmt = db.prepare(`
-    INSERT INTO users (username, email, password, role)
-    VALUES (?, ?, ?, ?)
-  `);
-  return stmt.run(username, email, password, role);
-}
-
-// READ ALL
 function getAllUsers() {
-  return db.prepare(`SELECT * FROM users`).all();
+  return db.get("users").value();
 }
 
-// READ ONE
-function getUserById(id) {
-  return db.prepare(`SELECT * FROM users WHERE id = ?`).get(id);
+function findUser(username) {
+  return db.get("users").find({ username }).value();
 }
 
-// UPDATE
-function updateUser(id, name, email) {
-  return db
-    .prepare(
-      `
-    UPDATE users
-    SET name = ?, email = ?
-    WHERE id = ?
-  `,
-    )
-    .run(name, email, id);
+function addUser(user) {
+  db.get("users").push(user).write();
 }
 
-// DELETE
-function deleteUserByUsername(username) {
-  return db
-    .prepare(
-      `
-    DELETE FROM users WHERE username = ?
-  `,
-    )
-    .run(username);
-}
-
-// DELETE ALL users (for testing purposes)
 function clearUsers() {
-  return db.prepare(`DELETE FROM users`).run();
+  db.set("users", []).write();
+}
+
+async function deleteUserByUsername(username) {
+  const users = await getAllUsers();
+  const userIndex = users.findIndex((user) => user.username === username);
+  if (userIndex === -1) {
+    throw new Error("User not found");
+  }
+  users.splice(userIndex, 1);
+  db.set("users", users).write();
 }
 
 module.exports = {
-  createUser,
   getAllUsers,
-  getUserById,
-  updateUser,
-  deleteUserByUsername,
+  findUser,
+  addUser,
   clearUsers,
+  deleteUserByUsername,
 };
