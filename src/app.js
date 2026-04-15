@@ -3,12 +3,11 @@ const session = require("express-session");
 const path = require("path");
 
 const { seedUsers } = require("./utils.js");
-// import { deleteUserByUsername, loadUsers } from "../db.js";
-
 const userRepo = require("./repositories/userRepository.js");
 
 const app = express();
-// seedUsers();
+seedUsers();
+
 // Middleware
 app.use(express.json());
 
@@ -25,8 +24,6 @@ app.use(
 // Set EJS as the view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "pages"));
-
-seedUsers();
 
 app.use("/css", express.static(path.resolve(__dirname, "pages", "css")));
 app.use("/js", express.static(path.resolve(__dirname, "pages", "js")));
