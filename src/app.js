@@ -34,9 +34,7 @@ app.use("/robots.txt", express.static(path.resolve(__dirname, "robots.txt")));
 
 // Render dynamic HTML with the first user
 app.get("/", (req, res) => {
-  //   const users = loadUsers();
   const users = userRepo.getAllUsers();
-  //   res.send(users);
   res.render("index", { users: users });
 });
 
@@ -58,10 +56,7 @@ app.get("/administrator-panel", function (req, res) {
 
 app.post("/delete/:username", function (req, res) {
   const { username } = req.params;
-  console.log(username);
   userRepo.deleteUserByUsername(username);
-  //
-  //   deleteUserByUsername(username);
   return res.send("user deleted");
 });
 
@@ -83,7 +78,7 @@ function isAdmin(req, res, next) {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const users = loadUsers();
+  const users = userRepo.getAllUsers();
   const user = users.find((user) => {
     return user.username === username;
   });
