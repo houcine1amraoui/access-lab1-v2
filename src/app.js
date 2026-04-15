@@ -10,6 +10,7 @@ seedUsers();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware for session handling
 app.use(
